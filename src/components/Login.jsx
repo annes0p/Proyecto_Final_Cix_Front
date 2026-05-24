@@ -29,65 +29,66 @@ function Login({ onLoginSuccess }) {
       justifyContent: 'center', 
       alignItems: 'center', 
       height: '100vh', 
-      backgroundColor: '#0f0f12', // Fondo oscuro tipo asfalto profundo
-      fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
+      backgroundColor: '#1a1d24', // Gris oscuro relajado (no negro puro)
+      fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'
     }}>
       <form onSubmit={handleSubmitLogin} style={{ 
-        backgroundColor: '#16161a', 
+        backgroundColor: '#222733', // Tarjeta grafito suave
         padding: '40px', 
-        borderRadius: '12px', 
-        border: '1px solid #d97706', // Borde ámbar/aceite
-        boxShadow: '0 8px 30px rgba(217, 119, 6, 0.15)', // Resplandor dorado tenue
+        borderRadius: '16px', 
+        border: '1px solid #2d3548', 
+        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)', 
         width: '350px' 
       }}>
         <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-          <h2 style={{ color: '#f59e0b', margin: 0, fontSize: '1.8em', letterSpacing: '2px', fontWeight: '800' }}>
-            CIXOIL S.A.C.<span style={{ fontSize: '0.8em' }}></span>
+          <h2 style={{ color: '#64dfdf', margin: 0, fontSize: '1.8em', letterSpacing: '1px', fontWeight: '700' }}>
+            CIXOIL <span style={{ fontSize: '0.8em' }}>📊</span>
           </h2>
-          <p style={{ color: '#8c8c9e', fontSize: '0.85em', marginTop: '5px' }}>
-            SISTEMA DE GESTIÓN Y RECOMENDACIÓN DE LUBRICANTES
+          <p style={{ color: '#94a3b8', fontSize: '0.85em', marginTop: '6px', fontWeight: '500' }}>
+            SISTEMA DE GESTIÓN INTEGRAL
           </p>
         </div>
 
         {loginError && (
           <div style={{ 
-            backgroundColor: '#2d1414', 
+            backgroundColor: '#382226', 
             color: '#fca5a5', 
             padding: '12px', 
-            borderRadius: '6px', 
+            borderRadius: '8px', 
             fontSize: '0.85em', 
             marginBottom: '20px', 
-            border: '1px solid #7f1d1d' 
+            border: '1px solid #6b21a8' 
           }}>
             ⚠️ {loginError}
           </div>
         )}
 
         <div style={{ marginBottom: '20px' }}>
-          <label style={{ color: '#cbd5e1', display: 'block', marginBottom: '6px', fontSize: '0.9em', fontWeight: '600' }}>
-            Usuario Industrial
+          <label style={{ color: '#cbd5e1', display: 'block', marginBottom: '6px', fontSize: '0.9em', fontWeight: '500' }}>
+            Usuario
           </label>
           <input 
             type="text" 
             value={username} 
             onChange={(e) => setUsername(e.target.value)}
             required
-            placeholder="Ej. admin_cixoil"
+            placeholder="Introduce tu usuario"
             style={{ 
               width: '100%', 
               padding: '12px', 
-              borderRadius: '6px', 
-              border: '1px solid #3f3f46', 
-              backgroundColor: '#202024', 
-              color: 'white', 
+              borderRadius: '8px', 
+              border: '1px solid #374151', 
+              backgroundColor: '#1a1d24', 
+              color: '#f8fafc', 
               boxSizing: 'border-box',
-              outline: 'none'
+              outline: 'none',
+              fontSize: '0.95em'
             }}
           />
         </div>
 
         <div style={{ marginBottom: '30px' }}>
-          <label style={{ color: '#cbd5e1', display: 'block', marginBottom: '6px', fontSize: '0.9em', fontWeight: '600' }}>
+          <label style={{ color: '#cbd5e1', display: 'block', marginBottom: '6px', fontSize: '0.9em', fontWeight: '500' }}>
             Contraseña
           </label>
           <input 
@@ -99,12 +100,13 @@ function Login({ onLoginSuccess }) {
             style={{ 
               width: '100%', 
               padding: '12px', 
-              borderRadius: '6px', 
-              border: '1px solid #3f3f46', 
-              backgroundColor: '#202024', 
-              color: 'white', 
+              borderRadius: '8px', 
+              border: '1px solid #374151', 
+              backgroundColor: '#1a1d24', 
+              color: '#f8fafc', 
               boxSizing: 'border-box',
-              outline: 'none'
+              outline: 'none',
+              fontSize: '0.95em'
             }}
           />
         </div>
@@ -115,21 +117,46 @@ function Login({ onLoginSuccess }) {
           style={{ 
             width: '100%', 
             padding: '14px', 
-            borderRadius: '6px', 
+            borderRadius: '8px', 
             border: 'none', 
-            backgroundColor: '#d97706', // Oro industrial / Aceite de motor
-            color: '#000', // Texto negro para alto contraste
-            fontWeight: 'bold', 
+            backgroundColor: '#4ea8de', // Azul cobalto suave, muy amigable
+            color: '#fff', 
+            fontWeight: '600', 
             cursor: loadingLogin ? 'not-allowed' : 'pointer', 
             fontSize: '1em',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            transition: 'background 0.3s'
+            letterSpacing: '0.5px',
+            marginBottom: '12px',
+            transition: 'background 0.2s',
+            boxShadow: '0 4px 12px rgba(78, 168, 222, 0.2)'
           }}
-          onMouseOver={(e) => !loadingLogin && (e.target.style.backgroundColor = '#f59e0b')}
-          onMouseOut={(e) => !loadingLogin && (e.target.style.backgroundColor = '#d97706')}
+          onMouseOver={(e) => !loadingLogin && (e.target.style.backgroundColor = '#56b4eb')}
+          onMouseOut={(e) => !loadingLogin && (e.target.style.backgroundColor = '#4ea8de')}
         >
-          {loadingLogin ? 'Sincronizando Motor...' : 'Encender Sistema'}
+          {loadingLogin ? 'Conectando...' : 'Ingresar al Sistema'}
+        </button>
+
+        <button 
+          type="button"
+          onClick={() => {
+            localStorage.setItem('token', 'token_falso_de_prueba_cixoil');
+            onLoginSuccess();
+          }}
+          style={{ 
+            width: '100%', 
+            padding: '11px', 
+            borderRadius: '8px', 
+            border: '1px solid #4b5563', 
+            backgroundColor: 'transparent',
+            color: '#9ca3af',
+            cursor: 'pointer', 
+            fontSize: '0.85em',
+            fontWeight: '500',
+            transition: 'all 0.2s'
+          }}
+          onMouseOver={(e) => { e.target.style.borderColor = '#9ca3af'; e.target.style.color = '#fff'; }}
+          onMouseOut={(e) => { e.target.style.borderColor = '#4b5563'; e.target.style.color = '#9ca3af'; }}
+        >
+          Omitir e Ir al Dashboard (Desarrollo)
         </button>
       </form>
     </div>

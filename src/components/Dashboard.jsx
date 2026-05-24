@@ -1,65 +1,39 @@
-import { useState, useEffect } from 'react';
-import { getUsers } from '../services/userService';
+// src/components/Dashboard.jsx
+import { useState } from 'react';
 import Navbar from './Navbar';
+import PersonalList from './PersonalList';
+import Lubricantes from './Lubricantes';
 
 function Dashboard() {
-  const [usuarios, setUsuarios] = useState([]);
-  const [loadingUsers, setLoadingUsers] = useState(false);
-
-  useEffect(() => {
-    const cargarUsuarios = async () => {
-      setLoadingUsers(true);
-      try {
-        const lista = await getUsers();
-        setUsuarios(lista || []);
-      } catch (error) {
-        console.error("Error al cargar la lista protegida:", error);
-      } finally {
-        setLoadingUsers(false);
-      }
-    };
-    cargarUsuarios();
-  }, []);
+  const [currentView, setCurrentView] = useState('inicio');
 
   return (
-    <div style={{ backgroundColor: '#121212', minHeight: '100vh', color: 'white', fontFamily: 'Arial, sans-serif' }}>
-      {/* Menú lateral estático */}
-      <Navbar />
+    <div style={{ backgroundColor: '#1a1d24', minHeight: '100vh', color: '#cbd5e1', fontFamily: '"Segoe UI", Roboto, sans-serif' }}>
+      <Navbar onViewChange={setCurrentView} currentView={currentView} />
 
-      {/* Contenedor del contenido que se desplaza a la derecha del Navbar */}
-      <div style={{ marginLeft: '240px', padding: '40px', boxSizing: 'border-box' }}>
-        <header style={{ borderBottom: '2px solid #333', paddingBottom: '15px', marginBottom: '30px' }}>
-          <h1>Panel de Control Integrado</h1>
-          <p style={{ color: '#aaa' }}>Bienvenido al sistema de gestión de lubricantes CIXOIL S.A.C.</p>
+      <div style={{ marginLeft: '260px', padding: '40px', boxSizing: 'border-box' }}>
+        <header style={{ borderBottom: '1px solid #2d3548', paddingBottom: '15px', marginBottom: '30px' }}>
+          <h1 style={{ margin: 0, fontSize: '1.8em', fontWeight: '700', color: '#fff' }}>
+            {currentView === 'inicio' && '📊 Dashboard Principal'}
+            {currentView === 'usuarios' && '👥 Operadores del Sistema'}
+            {currentView === 'lubricantes' && '🛢️ Control de Catálogo Maestro'}
+          </h1>
+          <p style={{ color: '#64748b', margin: '5px 0 0 0', fontSize: '0.9em', fontWeight: '500' }}>
+            Terminal de Gestión — CIXOIL S.A.C.
+          </p>
         </header>
 
-        {loadingUsers ? (
-          <p style={{ color: '#aaa' }}>Cargando información del servidor...</p>
-        ) : usuarios.length === 0 ? (
-          <p style={{ color: '#aaa' }}>Conexión exitosa. No se encontraron usuarios en la base de datos.</p>
-        ) : (
-          <div>
-            <h3 style={{ marginBottom: '15px', color: '#4dabf7' }}>Lista de Personal Autorizado</h3>
-            <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#1e1e1e', borderRadius: '8px', overflow: 'hidden' }}>
-              <thead>
-                <tr style={{ backgroundColor: '#2a2a2a', textAlign: 'left', borderBottom: '2px solid #333' }}>
-                  <th style={{ padding: '15px' }}>ID</th>
-                  <th style={{ padding: '15px' }}>Username</th>
-                  <th style={{ padding: '15px' }}>Email</th>
-                </tr>
-              </thead>
-              <tbody>
-                {usuarios.map((user) => (
-                  <tr key={user.id || user.username} style={{ borderBottom: '1px solid #333' }}>
-                    <td style={{ padding: '15px' }}>{user.id || '-'}</td>
-                    <td style={{ padding: '15px', fontWeight: 'bold' }}>{user.username}</td>
-                    <td style={{ padding: '15px', color: '#4dabf7' }}>{user.email}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {currentView === 'inicio' && (
+          <div style={{ backgroundColor: '#222733', padding: '40px', borderRadius: '16px', border: '1px solid #2d3548', textAlign: 'center' }}>
+            <h2 style={{ color: '#64dfdf', margin: '0 0 12px 0', fontWeight: '600' }}>Bienvenido al Panel Operativo</h2>
+            <p style={{ color: '#94a3b8', maxWidth: '520px', margin: '0 auto', fontSize: '0.95em', lineHeight: '1.5' }}>
+              El entorno visual ha sido ajustado para reducir la fatiga ocular. Utiliza el panel izquierdo para administrar el stock de lubricantes y verificar el personal activo.
+            </p>
           </div>
         )}
+
+        {currentView === 'usuarios' && <PersonalList />}
+        {currentView === 'lubricantes' && <Lubricantes />}
       </div>
     </div>
   );

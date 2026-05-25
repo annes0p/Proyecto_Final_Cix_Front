@@ -1,12 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Login';
+import Login from './pages/Login';
 import Dashboard from './components/Dashboard';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './routes/ProtectedRoute';
 
 function App() {
-  const handleLoginSuccess = () => {
-    window.location.href = '/dashboard';
-  };
 
   return (
     <Router>
@@ -14,23 +11,21 @@ function App() {
         {/* ¡CORREGIDO! Cambiado de <path> a <Route> */}
         <Route 
           path="/login" 
-          element={<Login onLoginSuccess={handleLoginSuccess} />} 
+          element={<Login />} 
         />
         
-        <Route 
-          path="/dashboard" 
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } 
-        />
+        <Route element={<ProtectedRoute/>}>
+          <Route
+            path="/dashboard" 
+            element={<Dashboard/>}
+          />
+        </Route>
 
         {/* Esta ruta comodín redirige automáticamente si escriben cualquier otra cosa */}
-        <Route 
+        {/* <Route 
           path="*" 
           element={<Navigate to="/dashboard" replace />} 
-        />
+        /> */}
       </Routes>
     </Router>
   );

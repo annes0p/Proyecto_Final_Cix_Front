@@ -1,12 +1,13 @@
-// src/components/Login.jsx
 import { useState } from 'react';
 import { login } from '../services/authService';
+import { useTheme } from '../context/ThemeContext';
 
 function Login({ onLoginSuccess }) {
-  const [username, setUsername] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(null);
   const [loadingLogin, setLoadingLogin] = useState(false);
+  const { colors } = useTheme();
 
   const handleSubmitLogin = async (e) => {
     e.preventDefault();
@@ -14,10 +15,10 @@ function Login({ onLoginSuccess }) {
     setLoadingLogin(true);
 
     try {
-      await login(username, password);
+      await login(identifier, password);
       onLoginSuccess(); 
     } catch (error) {
-      setLoginError("Credenciales incorrectas o servidor inaccesible.");
+      setLoginError("Las credenciales ingresadas no corresponden a un operador autorizado.");
     } finally {
       setLoadingLogin(false);
     }
@@ -29,138 +30,168 @@ function Login({ onLoginSuccess }) {
       justifyContent: 'center', 
       alignItems: 'center', 
       height: '100vh', 
-      backgroundColor: '#1a1d24', // Gris oscuro relajado (no negro puro)
-      fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+      backgroundColor: colors.fondo,
+      fontFamily: '"Inter", "Segoe UI", Roboto, sans-serif',
+      transition: 'background-color 0.3s ease'
     }}>
-      <form onSubmit={handleSubmitLogin} style={{ 
-        backgroundColor: '#222733', // Tarjeta grafito suave
-        padding: '40px', 
-        borderRadius: '16px', 
-        border: '1px solid #2d3548', 
-        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)', 
-        width: '350px' 
+      <div style={{ 
+        backgroundColor: colors.tarjeta, 
+        padding: '45px 40px', 
+        borderRadius: '24px',
+        border: `1px solid ${colors.borde}`, 
+        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)', 
+        width: '380px',
+        boxSizing: 'border-box'
       }}>
-        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-          <h2 style={{ color: '#64dfdf', margin: 0, fontSize: '1.8em', letterSpacing: '1px', fontWeight: '700' }}>
-            CIXOIL <span style={{ fontSize: '0.8em' }}>📊</span>
+        
+        {/* Cabecera Minimalista */}
+        <div style={{ marginBottom: '35px' }}>
+          <h2 style={{ color: colors.textoFuerte, margin: 0, fontSize: '1.6em', fontWeight: '700', tracking: '-0.5px' }}>
+            CIXOIL <span style={{ color: '#64dfdf', fontWeight: '700' }}>S.A.C.</span>
           </h2>
-          <p style={{ color: '#94a3b8', fontSize: '0.85em', marginTop: '6px', fontWeight: '500' }}>
-            SISTEMA DE GESTIÓN INTEGRAL
+          <p style={{ color: colors.textoSuave, fontSize: '0.88em', marginTop: '6px', lineHeight: '1.4' }}>
+            Introduce tus credenciales para acceder a la terminal de control comercial.
           </p>
         </div>
 
         {loginError && (
           <div style={{ 
-            backgroundColor: '#382226', 
-            color: '#fca5a5', 
-            padding: '12px', 
-            borderRadius: '8px', 
+            backgroundColor: '#fef2f2', 
+            color: '#991b1b', 
+            padding: '12px 16px', 
+            borderRadius: '10px', 
             fontSize: '0.85em', 
             marginBottom: '20px', 
-            border: '1px solid #6b21a8' 
+            border: '1px solid #fee2e2',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
           }}>
-            ⚠️ {loginError}
+            <i className="bi bi-exclamation-circle-fill"></i>
+            <span>{loginError}</span>
           </div>
         )}
 
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ color: '#cbd5e1', display: 'block', marginBottom: '6px', fontSize: '0.9em', fontWeight: '500' }}>
-            Usuario
-          </label>
-          <input 
-            type="text" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            placeholder="Introduce tu usuario"
+        <form onSubmit={handleSubmitLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          {/* Input de Identificador */}
+          <div>
+            <label style={{ color: colors.texto, display: 'block', marginBottom: '8px', fontSize: '0.88em', fontWeight: '500' }}>
+              Identificador del Operador
+            </label>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <i className="bi bi-shield-lock" style={{ position: 'absolute', left: '14px', color: colors.textoSuave }}></i>
+              <input 
+                type="text" 
+                value={identifier} 
+                onChange={(e) => setIdentifier(e.target.value)}
+                required
+                placeholder="Usuario, correo o DNI"
+                style={{ ...inputStyle, backgroundColor: colors.inputFondo, color: colors.textoFuerte, borderColor: colors.borde }}
+              />
+            </div>
+          </div>
+
+          {/* Input de Contraseña */}
+          <div>
+            <label style={{ color: colors.texto, display: 'block', marginBottom: '8px', fontSize: '0.88em', fontWeight: '500' }}>
+              Contraseña
+            </label>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <i className="bi bi-key" style={{ position: 'absolute', left: '14px', color: colors.textoSuave }}></i>
+              <input 
+                type="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+                style={{ ...inputStyle, backgroundColor: colors.inputFondo, color: colors.textoFuerte, borderColor: colors.borde }}
+              />
+            </div>
+          </div>
+
+          {/* Botón de Envío Principal */}
+          <button 
+            type="submit" 
+            disabled={loadingLogin}
+            style={{ 
+              width: '100%', 
+              padding: '14px', 
+              borderRadius: '12px', 
+              border: 'none', 
+              backgroundColor: '#4ea8de', 
+              color: '#fff', 
+              fontWeight: '600', 
+              cursor: loadingLogin ? 'not-allowed' : 'pointer', 
+              fontSize: '0.95em',
+              marginTop: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 4px 12px rgba(78, 168, 222, 0.25)'
+            }}
+            onMouseOver={(e) => !loadingLogin && (e.target.style.backgroundColor = '#3da0dd')}
+            onMouseOut={(e) => !loadingLogin && (e.target.style.backgroundColor = '#4ea8de')}
+          >
+            {loadingLogin ? (
+              <>
+                <i className="bi bi-arrow-clockwise" style={{ animation: 'spin 1s linear infinite' }}></i>
+                <span>Verificando firmas...</span>
+              </>
+            ) : (
+              <>
+                <i className="bi bi-unlock" style={{ fontSize: '1.05em' }}></i>
+                <span>Acceder al ERP</span>
+              </>
+            )}
+          </button>
+
+          {/* Botón de Bypass de Desarrollo */}
+          <button 
+            type="button"
+            onClick={() => {
+              localStorage.setItem('token', 'token_falso_de_prueba_cixoil');
+              onLoginSuccess();
+            }}
             style={{ 
               width: '100%', 
               padding: '12px', 
-              borderRadius: '8px', 
-              border: '1px solid #374151', 
-              backgroundColor: '#1a1d24', 
-              color: '#f8fafc', 
-              boxSizing: 'border-box',
-              outline: 'none',
-              fontSize: '0.95em'
+              borderRadius: '12px', 
+              border: `1px dashed ${colors.borde}`, 
+              backgroundColor: 'transparent',
+              color: colors.textoSuave,
+              cursor: 'pointer', 
+              fontSize: '0.85em',
+              fontWeight: '500',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              transition: 'all 0.2s ease'
             }}
-          />
-        </div>
-
-        <div style={{ marginBottom: '30px' }}>
-          <label style={{ color: '#cbd5e1', display: 'block', marginBottom: '6px', fontSize: '0.9em', fontWeight: '500' }}>
-            Contraseña
-          </label>
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="••••••••"
-            style={{ 
-              width: '100%', 
-              padding: '12px', 
-              borderRadius: '8px', 
-              border: '1px solid #374151', 
-              backgroundColor: '#1a1d24', 
-              color: '#f8fafc', 
-              boxSizing: 'border-box',
-              outline: 'none',
-              fontSize: '0.95em'
-            }}
-          />
-        </div>
-
-        <button 
-          type="submit" 
-          disabled={loadingLogin}
-          style={{ 
-            width: '100%', 
-            padding: '14px', 
-            borderRadius: '8px', 
-            border: 'none', 
-            backgroundColor: '#4ea8de', // Azul cobalto suave, muy amigable
-            color: '#fff', 
-            fontWeight: '600', 
-            cursor: loadingLogin ? 'not-allowed' : 'pointer', 
-            fontSize: '1em',
-            letterSpacing: '0.5px',
-            marginBottom: '12px',
-            transition: 'background 0.2s',
-            boxShadow: '0 4px 12px rgba(78, 168, 222, 0.2)'
-          }}
-          onMouseOver={(e) => !loadingLogin && (e.target.style.backgroundColor = '#56b4eb')}
-          onMouseOut={(e) => !loadingLogin && (e.target.style.backgroundColor = '#4ea8de')}
-        >
-          {loadingLogin ? 'Conectando...' : 'Ingresar al Sistema'}
-        </button>
-
-        <button 
-          type="button"
-          onClick={() => {
-            localStorage.setItem('token', 'token_falso_de_prueba_cixoil');
-            onLoginSuccess();
-          }}
-          style={{ 
-            width: '100%', 
-            padding: '11px', 
-            borderRadius: '8px', 
-            border: '1px solid #4b5563', 
-            backgroundColor: 'transparent',
-            color: '#9ca3af',
-            cursor: 'pointer', 
-            fontSize: '0.85em',
-            fontWeight: '500',
-            transition: 'all 0.2s'
-          }}
-          onMouseOver={(e) => { e.target.style.borderColor = '#9ca3af'; e.target.style.color = '#fff'; }}
-          onMouseOut={(e) => { e.target.style.borderColor = '#4b5563'; e.target.style.color = '#9ca3af'; }}
-        >
-          Omitir e Ir al Dashboard (Desarrollo)
-        </button>
-      </form>
+            onMouseOver={(e) => { e.target.style.color = colors.textoFuerte; e.target.style.borderColor = colors.textoSuave; }}
+            onMouseOut={(e) => { e.target.style.color = colors.textoSuave; e.target.style.borderColor = colors.borde; }}
+          >
+            <i className="bi bi-cpu" style={{ fontSize: '1.1em' }}></i>
+            Omitir autenticación (Desarrollo)
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
+
+const inputStyle = { 
+  width: '100%', 
+  padding: '13px 14px 13px 42px', 
+  borderRadius: '12px', 
+  border: '1px solid', 
+  boxSizing: 'border-box', 
+  outline: 'none', 
+  fontSize: '0.92em',
+  transition: 'all 0.2s ease'
+};
 
 export default Login;

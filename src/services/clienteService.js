@@ -1,4 +1,3 @@
-// src/services/clienteService.js
 import api from './api';
 
 // Obtener todos los clientes frecuentes con sus vehículos asociados

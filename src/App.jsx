@@ -5,18 +5,20 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   const handleLoginSuccess = () => {
+
     window.location.href = '/dashboard';
   };
 
   return (
     <Router>
       <Routes>
-        {/* ¡CORREGIDO! Cambiado de <path> a <Route> */}
+        {/* Portal de Acceso Seguro */}
         <Route 
           path="/login" 
           element={<Login onLoginSuccess={handleLoginSuccess} />} 
         />
         
+        {/* Entorno ERP Protegido */}
         <Route 
           path="/dashboard" 
           element={
@@ -26,7 +28,7 @@ function App() {
           } 
         />
 
-        {/* Esta ruta comodín redirige automáticamente si escriben cualquier otra cosa */}
+        {/* Guardia de seguridad para rutas inválidas */}
         <Route 
           path="*" 
           element={<Navigate to="/dashboard" replace />} 

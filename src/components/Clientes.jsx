@@ -90,7 +90,7 @@ function Clientes() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '5px' }}>
             <i className="bi bi-collection" style={{ color: '#64dfdf' }}></i>
-            <h3 style={{ margin: 0, color: '#fff', fontSize: '1.1em', fontWeight: '600' }}>Registros de Clientes Activos</h3>
+            <h3 style={{ margin: 0, color: '#1a1d24', fontSize: '1.1em', fontWeight: '700' }}>Registros de Clientes Activos</h3>
           </div>
           
           {loading ? (
